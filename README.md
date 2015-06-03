@@ -3,21 +3,21 @@ This is a collection of custom MVC validation types that can be used in combinat
 
 
 #### Why are these so special?
-These validations use "expression walking". The expression argument used is parsed into LINQ, which is then converted into C# for the server-side validation and JavaScript for the client-side validation. By keeping things loose and DRY, your conditions stay in one place and allow for great flexibility.
+These validations use "expression walking" to define the conditions that the validator must meet in order to be invoked. The expressions you provide are parsed into LINQ, which are then converted into C# for the server-side validation and JavaScript for the client-side validation. By keeping things loose and DRY, your conditions stay in one place, allowing for greater flexibility and the benefit of client- and server-side conditional validation.
 
 
-##### Expressions
-Expressions define the condition that must be true in order for the validation to occur. The expressions follow C# syntax, with one exception: strings should be represented by single quotes (') instead of double quotes ("). You can use the C# operators in your expression to help define your logic.
+##### What are expressions?
+Expressions are strings that define the condition that must be true in order for the validation to occur. The expressions follow C# syntax, with one exception: strings should be represented by single quotes (') instead of double quotes ("). You can use the C# operators in your expressions to define your logic.
 Let's say you have a view model with some properties: Name (string), ID (int), and IsNew (bool).
 Here are some sample expression strings you can pass in to these arguments:
 ```csharp
-IsNew
 IsNew == true
-IsNew != true
+IsNew                     // Equivolent to IsNew == true
+!IsNew                    // Equivolent to IsNew == false
 ID == 1
 ID > 1
-Name == 'Joe'
-Name != 'Joe'
+Name == 'Joe'             // Note the single quotes
+Name != 'Joe'             // Note the single quotes
 !IsNew && ID <= 100
 IsNew || ID == 0
 ```
