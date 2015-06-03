@@ -1,0 +1,152 @@
+﻿@model MVCValidations.ViewModels.FormViewModel
+@{
+    ViewBag.Title = "Validation Samples";
+}
+
+<style>
+    .form-group { padding: 20px 0; }
+</style>
+
+
+<h2 class="page-header">@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-sm-8">
+
+            <h3>Conditional <code>Required</code></h3>
+
+            <div class="form-group">
+                <label>Email <code>[RequiredIf("OptIn")]</code></label>
+
+                <div class="checkbox">
+                    <label>
+                        @Html.EditorFor(c => c.OptIn) Opt-in to receive emails
+                    </label>
+                </div>
+
+                @Html.TextBoxFor(c => c.Email, new { @class = "form-control", placeholder = "Required if you are opting in" })
+                @Html.ValidationMessageFor(c => c.Email)
+            </div>
+            <div class="form-group">
+                <label>Some more info <code>[RequiredIf("Email == \"joe@@aol.com\"")]</code></label>
+                @Html.TextBoxFor(c => c.EmailExtended, new { @class = "form-control", placeholder = "Required if the provided email is joe@aol.com" })
+                @Html.ValidationMessageFor(c => c.EmailExtended)
+            </div>
+
+            <div class="form-group">
+                <label>Even more info <code>[RequiredIf("OptIn && Email == 'joe@aol.com'")]</code></label>
+                @Html.TextBoxFor(c => c.EmailExtended2, new { @class = "form-control", placeholder = "Required if we are opting in AND the provided email is joe@aol.com" })
+                @Html.ValidationMessageFor(c => c.EmailExtended2)
+            </div>
+
+
+            <hr />
+
+
+            <h3>Conditional <code>RegularExpression</code></h3>
+
+            <div class="form-group">
+                <label>Age <code>[RegularExpressionIf("ValidateAge", @@"^\d+$")]</code></label>
+
+                <div class="checkbox">
+                    <label>
+                        @Html.EditorFor(c => c.ValidateAge) Ensure that my age is a valid number
+                    </label>
+                </div>
+
+                @Html.TextBoxFor(c => c.Age, new { @class = "form-control", placeholder = "Must be a number if the above checkbox is checked" })
+                @Html.ValidationMessageFor(c => c.Age)
+            </div>
+
+
+            <div class="form-group">
+                <label>Name <code>[RegularExpressionIf("NameRule == 1", @@"^joe$","NameRule == 2", @@"^mike$")]</code></label>
+
+                <div class="radio">
+                    <label>
+                        @Html.RadioButtonFor(c => c.NameRule, "1") Only allow "joe"
+                    </label>
+                </div>
+
+                <div class="radio">
+                    <label>
+                        @Html.RadioButtonFor(c => c.NameRule, "2") Only allow "mike"
+                    </label>
+                </div>
+
+                @Html.TextBoxFor(c => c.Name, new { @class = "form-control", placeholder = "Only allows the selected name" })
+                @Html.ValidationMessageFor(c => c.Name)
+            </div>
+
+
+
+            <hr />
+
+
+            <h3>Combined Conditionals</h3>
+
+
+            <div class="form-group">
+                <label>
+                    Tax ID <pre>[RequiredIf("RequireTaxID == true"), 
+RegularExpressionIf(
+    "TaxIDType == 1", @@"^(^\d{3}-?\d{2}-?\d{4}$|^XXX-XX-XXXX$)$", 
+    "TaxIDType == 2", @@"^[1-9]\d?-\d{7}$"
+)]</pre>
+                </label>
+
+                <div class="checkbox">
+                    <label>
+                        @Html.EditorFor(c => c.RequireTaxID) Require the tax ID
+                    </label>
+                </div>
+
+                <div class="radio">
+                    <label>
+                        @Html.RadioButtonFor(c => c.TaxIDType, "1") SSN (###-##-####)
+                    </label>
+                </div>
+
+                <div class="radio">
+                    <label>
+                        @Html.RadioButtonFor(c => c.TaxIDType, "2") EIN (##-#######)
+                    </label>
+                </div>
+
+                @Html.TextBoxFor(c => c.TaxID, new { @class = "form-control", placeholder = "Tax ID" })
+                @Html.ValidationMessageFor(c => c.TaxID)
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Required Files</h4>
+                </div>
+                <div class="panel-body">
+                    <small>
+                        <ul class="list-unstyled">
+                            <li>~/Content/jquery.validate.unobtrusive.custom.js</li>
+                            <li>~/Helpers/Expressions/JavascriptExpressionVisitor.cs</li>
+                            <li>~/Filters/Validations/ConditionalValidationAttribute.cs</li>
+                            <li>~/Filters/Validations/RequiredIf.cs</li>
+                            <li>~/Filters/Validations/RegularExpressionIf.cs</li>
+                        </ul>
+                    </small>
+                </div>
+            </div>
+
+
+            <h4>Validation Summary</h4>
+
+            @Html.ValidationSummary(false)
+        </div>
+    </div>
+}
