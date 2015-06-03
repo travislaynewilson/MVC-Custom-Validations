@@ -1,5 +1,5 @@
 # MVC-Custom-Validations
-This is a collection of custom MVC validation types taht can be used in combination with each other as well as the native MVC validations.
+This is a collection of custom MVC validation types that can be used in combination with each other as well as the native MVC validations.
 
 
 #### Why are these so special?
