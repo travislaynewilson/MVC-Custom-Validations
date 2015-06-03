@@ -26,11 +26,11 @@ IsNew || ID == 0
 
 ## Validations
 
-### RequiredIf
+### RequiredIfAttribute
 ```csharp
 [RequiredIf(string expression)]
 ```
-This tag will optionally require a field, based on the provided expression.
+This attribute will conditionally require a field, based on the provided expression.
 
 ##### Examples
 ```csharp
@@ -44,14 +44,18 @@ This tag will optionally require a field, based on the provided expression.
 [RequiredIf("IsNew || ID == 0")]
 ```
 
-### RegularExpressionIf
+### RegularExpressionIfAttribute
 ```csharp
 [RegularExpressionIf(params string[] expressions)]
 ```
-This tag will optionally perform a regular expression if the condition applies and a value is provided. If not value is provided, the cases will not attempt to validate.
+This attribute will conditionally perform a regular expression validation if the condition is true and a value is provided. If no value is provided, the validation will not occur.
 
 ##### Defining Multiple Cases
-This validator allows you to define multiple expressions, or 'cases'. Because you cannot pass complex objects into an attribute, this one uses a pattern to help you define your expression and regular expression. For each 'case' you want to match, you will pass two strings: The first is your expression, and the second is your regular expression that will be used if the expression matches.
+This attribute allows you to define multiple expressions, or 'cases', that will be checked in the order they are defined. However, because C# does not allow us to pass complex objects into an attribute, we must provide two strings per 'case': The first is your condition expression, and the second is the regular expression that will be used if the condition is true.
+
+Remember that you must provide two strings per case. This means that you will always pass at least two strings for every case, and their order is important.
+
+If more than one case has a valid condition, only the first case defined will be validated. It is recommended that you define your cases starting with your most specific conditions first.
 
 ##### Examples
 ```csharp
