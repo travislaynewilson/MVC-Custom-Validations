@@ -22,6 +22,10 @@ Name != 'Joe'             // Note the single quotes
 IsNew || ID == 0
 ```
 
+
+
+## Validations
+
 ### RequiredIf
 ```csharp
 [RequiredIf(string expression)]
