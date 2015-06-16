@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace MVCValidations.Helpers.Expressions
@@ -42,11 +44,34 @@ namespace MVCValidations.Helpers.Expressions
                 var serialisedValue = SerializeDate(value);
                 return serialisedValue;
             }
-            var propertyName = memberExpression.Member.Name;
+
+            var properties = GetProperties(memberExpression.Expression).ToList();
+            properties.Add(memberExpression.Member as PropertyInfo);
+            var result = string.Join(".", properties.Select(c => c.Name));
+
             // TODO - should verify that it's the model...
-            return string.Format("gv('*.{0}')", propertyName);
+            return string.Format("gv('*.{0}')", result);
             throw new InvalidOperationException("Shouldn't reach here!");
         }
+
+        private IEnumerable<PropertyInfo> GetProperties(Expression expression)
+        {
+            var memberExpression = expression as MemberExpression;
+            if (memberExpression == null) yield break;
+
+            var property = memberExpression.Member as PropertyInfo;
+            if (property == null)
+            {
+                throw new Exception("Expression is not a property accessor");
+            }
+            foreach (var propertyInfo in GetProperties(memberExpression.Expression))
+            {
+                yield return propertyInfo;
+            }
+            yield return property;
+        }
+
+
 
         private DateTime GetDatePropertyValue(MemberExpression memberExpression)
         {
@@ -162,21 +187,6 @@ namespace MVCValidations.Helpers.Expressions
             ConstantExpression constantExpression = (ConstantExpression)expression;
             return constantExpression.Value;
         }
-
-
-        //protected override Expression VisitLambda<T>(Expression<T> node)
-        //{
-        //    // delve into the lambda
-        //    return base.VisitLambda(node);
-        //}
-
-        //protected override Expression VisitParameter(ParameterExpression node)
-        //{
-        //    // called on member invoke
-        //    return base.VisitParameter(node);
-        //}
-
-
 
 
         protected override Expression VisitBlock(BlockExpression node)
