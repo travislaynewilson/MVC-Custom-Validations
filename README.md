@@ -82,3 +82,6 @@ The files required to include these validators in your own project are:
 * ~/Filters/Validations/ConditionalValidationAttribute.cs
 * ~/Filters/Validations/RequiredIf.cs
 * ~/Filters/Validations/RegularExpressionIf.cs
+
+#### Dependencies
+To evaluate strings as expressions, we use the [DynamicQuery library](https://www.nuget.org/packages/DynamicQuery/).
