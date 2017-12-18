@@ -28,7 +28,7 @@ namespace MVCValidations.Filters.Validations
             var conditionMet = (bool)conditionFunction.DynamicInvoke(validationContext.ObjectInstance);
             if (conditionMet && value == null)
             {
-                return new ValidationResult(FormatErrorMessage(null));
+                return new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
             }
             return null;
         }
